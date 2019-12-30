@@ -208,6 +208,42 @@ public class MyView extends View {
         DrawLinePairs(canvas, draw_cube_vertices, 3, 7, lightBluePaint);
     }
 
+    private void DrawCubeMiddle(Canvas canvas)
+    {//draw a cube on the screen
+        draw_cube_vertices=translate(cube_vertices,2,11.7,0);
+        draw_cube_vertices=scale(draw_cube_vertices,180,60,0);
+        DrawLinePairs(canvas, draw_cube_vertices, 0, 1, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 1, 3, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 3, 2, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 2, 0, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 4, 5, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 5, 7, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 7, 6, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 6, 4, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 0, 4, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 1, 5, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 2, 6, pinkPaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 3, 7, pinkPaint);
+    }
+
+    private void DrawCubeLeftLeg1(Canvas canvas)
+    {//draw a cube on the screen
+        draw_cube_vertices=translate(cube_vertices,3.8,13.7,0);
+        draw_cube_vertices=scale(draw_cube_vertices,60,60,0);
+        DrawLinePairs(canvas, draw_cube_vertices, 0, 1, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 1, 3, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 3, 2, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 2, 0, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 4, 5, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 5, 7, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 7, 6, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 6, 4, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 0, 4, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 1, 5, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 2, 6, bluePaint);
+        DrawLinePairs(canvas, draw_cube_vertices, 3, 7, bluePaint);
+    }
+
     private void DrawLine(Canvas canvas)
     {//draw a cube on the screen
         draw_cube_vertices=translate(cube_vertices,2,18,4);
@@ -237,6 +273,8 @@ public class MyView extends View {
         DrawCubeRightHand2(canvas);
         DrawCubeLeftHand3(canvas);
         DrawCubeRightHand3(canvas);
+        DrawCubeMiddle(canvas);
+        DrawCubeLeftLeg1(canvas);
         DrawLine1(canvas);
     }
     //*********************************
