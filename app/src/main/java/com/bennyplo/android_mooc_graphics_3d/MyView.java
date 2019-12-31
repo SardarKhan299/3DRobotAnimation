@@ -444,5 +444,34 @@ public class MyView extends View {
         return Transformation(vertices,matrix);
     }
 
+    private Coordinate[]share(Coordinate []vertices,double hx,double hy)
+    {
+        double []matrix=GetIdentityMatrix();
+        matrix[2]=hx;
+        matrix[6]=hy;
+        return Transformation(vertices,matrix);
+    }
+    private Coordinate[]rotate(Coordinate []vertices,int angle,String axis)
+    {
+        double []matrix=GetIdentityMatrix();
+        if(axis.contentEquals("x")) {
+            matrix[5] = angle;
+            matrix[6] = angle;
+            matrix[9] = angle;
+            matrix[10] = angle;
+        }else if(axis.contentEquals("y")){
+            matrix[0] = angle;
+            matrix[2] = angle;
+            matrix[8] = angle;
+            matrix[10] = angle;
+        }else if(axis.contentEquals("z")){
+            matrix[0] = angle;
+            matrix[1] = angle;
+            matrix[4] = angle;
+            matrix[5] = angle;
+        }
+        return Transformation(vertices,matrix);
+    }
+
 
 }
