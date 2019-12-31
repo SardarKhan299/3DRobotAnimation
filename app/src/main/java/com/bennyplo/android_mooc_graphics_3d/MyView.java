@@ -7,6 +7,10 @@ import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
 
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MyView extends View {
     private Paint redPaint,bluePaint,pinkPaint,greenPaint,lightBluePaint; //paint object for drawing the lines
     private Coordinate[]cube_vertices;//the vertices of a 3D cube
@@ -14,6 +18,8 @@ public class MyView extends View {
     public MyView(Context context) {
         super(context, null);
         final MyView thisview=this;
+
+
         //create the paint object
         redPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         redPaint.setStyle(Paint.Style.STROKE);//Stroke
@@ -53,6 +59,17 @@ public class MyView extends View {
         draw_cube_vertices=translate(cube_vertices,4,4,4);
         draw_cube_vertices=scale(draw_cube_vertices,90,60,60);
         thisview.invalidate();//update the view
+        //////////////////////////////////////////
+        // Add Timer to Enable ANimation...///
+         Timer timer = new Timer();
+         TimerTask task= new TimerTask() {
+            @Override
+            public void run() {
+                //add your code to rotate the object about the axis
+                thisview.invalidate();//update the view
+            }
+        };
+        timer.scheduleAtFixedRate(task,100,100);
     }
 
     private  void DrawLinePairs(Canvas canvas, Coordinate[] vertices, int start, int end, Paint paint)
