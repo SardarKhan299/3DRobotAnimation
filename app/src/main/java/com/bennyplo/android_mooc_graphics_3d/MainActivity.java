@@ -10,7 +10,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
         getSupportActionBar().hide();//hide the title bar
-        mMyView=new MyView(this);
+        mMyView=new MyView(MainActivity.this);
         setContentView(mMyView);
     }
 }

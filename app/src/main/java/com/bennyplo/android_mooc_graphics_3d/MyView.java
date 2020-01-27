@@ -1,11 +1,18 @@
 package com.bennyplo.android_mooc_graphics_3d;
 
+import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 
 import java.sql.Time;
 import java.util.Timer;
@@ -15,34 +22,39 @@ public class MyView extends View {
     private Paint redPaint,bluePaint,pinkPaint,greenPaint,lightBluePaint; //paint object for drawing the lines
     private Coordinate[]cube_vertices;//the vertices of a 3D cube
     private Coordinate[]draw_cube_vertices;//the vertices for drawing a 3D cube
-    public MyView(Context context) {
+    private Canvas canvas = null;
+    private Animation anim;
+    private Activity mContext;
+
+    public MyView(final Activity context) {
         super(context, null);
+        this.mContext = context;
         final MyView thisview=this;
 
 
         //create the paint object
         redPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        redPaint.setStyle(Paint.Style.STROKE);//Stroke
+        redPaint.setStyle(Paint.Style.FILL);//Stroke
         redPaint.setColor(Color.RED);
         redPaint.setStrokeWidth(2);
 
         bluePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        bluePaint.setStyle(Paint.Style.STROKE);//Stroke
+        bluePaint.setStyle(Paint.Style.FILL);//Stroke
         bluePaint.setColor(Color.BLUE);
         bluePaint.setStrokeWidth(2);
 
         pinkPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        pinkPaint.setStyle(Paint.Style.STROKE);//Stroke
+        pinkPaint.setStyle(Paint.Style.FILL);//Stroke
         pinkPaint.setColor(Color.parseColor("#FF4081"));
         pinkPaint.setStrokeWidth(2);
 
         greenPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        greenPaint.setStyle(Paint.Style.STROKE);//Stroke
+        greenPaint.setStyle(Paint.Style.FILL);//Stroke
         greenPaint.setColor(Color.GREEN);
         greenPaint.setStrokeWidth(2);
 
         lightBluePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        lightBluePaint.setStyle(Paint.Style.STROKE);//Stroke
+        lightBluePaint.setStyle(Paint.Style.FILL);//Stroke
         lightBluePaint.setColor(Color.parseColor("#5DD4E3"));
         lightBluePaint.setStrokeWidth(2);
 
@@ -56,20 +68,10 @@ public class MyView extends View {
         cube_vertices[5] = new Coordinate(1, -1, 1, 1);
         cube_vertices[6] = new Coordinate(1, 1, -1, 1);
         cube_vertices[7] = new Coordinate(1, 1, 1, 1);
+
         draw_cube_vertices=translate(cube_vertices,4,4,4);
         draw_cube_vertices=scale(draw_cube_vertices,90,60,60);
-        thisview.invalidate();//update the view
-        //////////////////////////////////////////
-        // Add Timer to Enable ANimation...///
-         Timer timer = new Timer();
-         TimerTask task= new TimerTask() {
-            @Override
-            public void run() {
-                //add your code to rotate the object about the axis
-                thisview.invalidate();//update the view
-            }
-        };
-        timer.scheduleAtFixedRate(task,100,100);
+
     }
 
     private  void DrawLinePairs(Canvas canvas, Coordinate[] vertices, int start, int end, Paint paint)
@@ -80,11 +82,13 @@ public class MyView extends View {
         //end - index of the ending point
         //paint - the paint of the line
         Log.d("MyView", "DrawLinePairs: "+(int)vertices[start].x+"-"+(int)vertices[start].y+"-"+(int)vertices[end].x+"-"+(int)vertices[end].y);
+
         canvas.drawLine((int)vertices[start].x,(int)vertices[start].y,(int)vertices[end].x,(int)vertices[end].y,paint);
     }
 
     private void DrawCube(Canvas canvas)
     {//draw a cube on the screen
+
         DrawLinePairs(canvas, draw_cube_vertices, 0, 1, bluePaint);
         DrawLinePairs(canvas, draw_cube_vertices, 1, 3, bluePaint);
         DrawLinePairs(canvas, draw_cube_vertices, 3, 2, bluePaint);
@@ -372,23 +376,74 @@ public class MyView extends View {
     protected void onDraw(Canvas canvas) {
         //draw objects on the screen
         super.onDraw(canvas);
-        DrawCube(canvas);//draw a cube onto the screen
-        DrawCubeHead(canvas);
-        DrawLine(canvas);
-        DrawCubeLeftHand1(canvas);
-        DrawCubeRightHand1(canvas);
-        DrawCubeLeftHand2(canvas);
-        DrawCubeRightHand2(canvas);
-        DrawCubeLeftHand3(canvas);
-        DrawCubeRightHand3(canvas);
-        DrawCubeMiddle(canvas);
-        DrawCubeLeftLeg1(canvas);
-        DrawCubeRightLeg1(canvas);
-        DrawCubeLeftLeg2(canvas);
-        DrawCubeRightLeg2(canvas);
-        DrawCubeLeftFoot(canvas);
-        DrawCubeRightFoot(canvas);
-        DrawLine1(canvas);
+        this.canvas = canvas;
+//        //Starts the animation to rotate the circle.
+//        if (anim == null) {
+//            createAnimationIn(canvas);
+//        }
+        DrawCube(this.canvas );//draw a cube onto the screen
+        DrawCubeHead(this.canvas );
+        DrawLine(this.canvas );
+        DrawCubeLeftHand1(this.canvas );
+        DrawCubeRightHand1(this.canvas );
+        DrawCubeLeftHand2(this.canvas );
+        DrawCubeRightHand2(this.canvas );
+        DrawCubeLeftHand3(this.canvas );
+        DrawCubeRightHand3(this.canvas );
+        DrawCubeMiddle(this.canvas );
+        DrawCubeLeftLeg1(this.canvas );
+        DrawCubeRightLeg1(this.canvas );
+        DrawCubeLeftLeg2(this.canvas );
+        DrawCubeRightLeg2(this.canvas );
+        DrawCubeLeftFoot(this.canvas );
+        DrawCubeRightFoot(this.canvas );
+        DrawLine1(this.canvas );
+
+        //////////////////////////////////////////
+        // Add Timer to Enable ANimation...///
+
+        Timer timer = new Timer();
+        TimerTask task= new TimerTask() {
+            @Override
+            public void run() {
+                //add your code to rotate the object about the axis
+                draw_cube_vertices=rotate(draw_cube_vertices,180,"y");
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        invalidate();//update the view
+                    }
+                });
+
+            }
+        };
+        timer.scheduleAtFixedRate(task,5000,5000);
+
+    }
+
+    private void createAnimationIn(Canvas canvas) {
+//        ObjectAnimator animation = ObjectAnimator.ofFloat(canvas, "rotation", 0.0f, 360f);
+//        animation.setDuration(36000);
+//        animation.setRepeatCount(ObjectAnimator.INFINITE);
+//        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+//        animation.start();
+        anim = new RotateAnimation(0, 360,  Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setRepeatMode(Animation.RESTART);
+        anim.setRepeatCount(Animation.INFINITE);
+        anim.setDuration(2000L);
+        startAnimation(anim);
+    }
+    private void createAnimationOut(Canvas canvas) {
+//        ObjectAnimator animation = ObjectAnimator.ofFloat(canvas, "rotation", 0.0f, 360f);
+//        animation.setDuration(36000);
+//        animation.setRepeatCount(ObjectAnimator.INFINITE);
+//        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+//        animation.start();
+        anim = new RotateAnimation(90, 0,  Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        //anim.setRepeatMode(Animation.RESTART);
+        //anim.setRepeatCount(Animation.INFINITE);
+        anim.setDuration(1000L);
+        startAnimation(anim);
     }
     //*********************************
     //matrix and transformation functions
@@ -455,20 +510,20 @@ public class MyView extends View {
     {
         double []matrix=GetIdentityMatrix();
         if(axis.contentEquals("x")) {
-            matrix[5] = angle;
-            matrix[6] = angle;
-            matrix[9] = angle;
-            matrix[10] = angle;
+            matrix[5] = Math.cos(angle);
+            matrix[6] = -(Math.sin(angle));
+            matrix[9] = Math.sin(angle);
+            matrix[10] = Math.cos(angle);
         }else if(axis.contentEquals("y")){
-            matrix[0] = angle;
-            matrix[2] = angle;
-            matrix[8] = angle;
-            matrix[10] = angle;
+            matrix[0] = Math.cos(angle);
+            matrix[2] = Math.sin(angle);
+            matrix[8] = -(Math.sin(angle));
+            matrix[10] = Math.cos(angle);
         }else if(axis.contentEquals("z")){
-            matrix[0] = angle;
-            matrix[1] = angle;
-            matrix[4] = angle;
-            matrix[5] = angle;
+            matrix[0] =  Math.cos(angle);
+            matrix[1] = -(Math.sin(angle));
+            matrix[4] = Math.sin(angle);
+            matrix[5] = Math.cos(angle);
         }
         return Transformation(vertices,matrix);
     }
